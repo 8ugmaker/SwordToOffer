@@ -1,0 +1,57 @@
+/**
+* Description
+* 输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。
+* 假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
+* 例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
+*/
+
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+ 
+ public class Solution {
+    //根据前序的根节点寻找其在中序中的位置
+    public int find(int target,int left,int right,int[] mid){
+        int i;
+        for(i=left;i<=right;i++){
+            if(mid[i] == target){
+                break;
+            }
+        }
+        return i;
+    }
+    
+    int prelocation = 0;
+    
+    public TreeNode getNode(int left,int right,int[] mid,int []pre){
+        int index = find(pre[prelocation ++],left,right,mid);
+        TreeNode tn = new TreeNode(mid[index]);
+        if(index != left){
+            tn.left = getNode(left,index-1,mid,pre);
+        }
+        if(index != right){
+            tn.right = getNode(index+1,right,mid,pre);
+        }
+        return tn;
+    }
+    
+    public TreeNode reConstructBinaryTree(int [] pre,int [] in) {
+        TreeNode tn = new TreeNode(pre[prelocation]);
+        int rootlocation = find(pre[prelocation ++],0,in.length-1,in);
+        if(rootlocation != 0){
+            tn.left = getNode(0,rootlocation-1,in,pre);
+        }
+        if(rootlocation != in.length-1){
+            tn.right = getNode(rootlocation+1,in.length-1,in,pre);
+        }
+        return tn;
+    }
+}
+ 
+ 
